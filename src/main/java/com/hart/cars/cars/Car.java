@@ -112,4 +112,14 @@ public class Car {
     public void setDriver(Driver driver) {
         this.driver = driver;
     }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", brand='" + model + '\'' +
+                ", make='" + make + '\'' +
+                ", door=" + door +
+                '}';
+    }
 }

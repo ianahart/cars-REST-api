@@ -123,4 +123,14 @@ public class Driver {
     public void setCars(List<Car> cars) {
         this.cars = cars;
     }
+
+    @Override
+    public String toString() {
+        return "Driver{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email=" + email +
+                '}';
+    }
 }
