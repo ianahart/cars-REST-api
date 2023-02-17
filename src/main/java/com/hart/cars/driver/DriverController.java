@@ -1,8 +1,10 @@
 package com.hart.cars.driver;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
-import com.hart.cars.driver.dto.UpdateDriver;
+import com.hart.cars.cars.Car;
 import com.hart.cars.driver.dto.UpdateDriverDto;
 
 import org.hibernate.Hibernate;
@@ -38,11 +40,14 @@ public class DriverController {
     }
 
     @GetMapping("/{driverId}/")
-    public List<Object> getDriver(@PathVariable("driverId") Long driverId) {
+    public HashMap<String, Object> getDriver(@PathVariable("driverId") Long driverId) {
         Driver driver = this.driverService.getDriver(driverId);
         Hibernate.initialize(driver.getCars());
-        return List.of(driver, driver.getCars());
+        HashMap<String, Object> response = new HashMap<String, Object>();
+        response.put("driver", driver);
+        response.put("cars", driver.getCars());
 
+        return response;
     }
 
     @PatchMapping("/{driverId}/")
