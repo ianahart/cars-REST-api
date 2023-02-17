@@ -90,6 +90,7 @@ public class DriverService {
         if (updateDriverDto.getLastName() != null) {
             driver.setLastName(updateDriverDto.getLastName());
         }
+        this.driverRepository.save(driver);
         return driver;
     }
 
