@@ -5,17 +5,39 @@ import java.util.List;
 import java.util.Optional;
 
 import com.hart.cars.advice.BadRequestException;
+import com.hart.cars.advice.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class DriverService {
     private final DriverRepository driverRepository;
 
     @Autowired
     public DriverService(DriverRepository driverRepository) {
         this.driverRepository = driverRepository;
+    }
+
+    public Driver getDriver(Long userId) {
+        Boolean exists = this.driverRepository.existsById(userId);
+
+        if (!exists) {
+            throw new NotFoundException("The driver with the id " + userId + " was not found.");
+        }
+
+        Driver driver = this.driverRepository.findById(userId).orElseThrow();
+
+        return driver;
+
+    }
+
+    @Transactional
+    public List<Driver> getAllDrivers() {
+        List<Driver> drivers = this.driverRepository.findAll();
+        return this.driverRepository.getAll();
     }
 
     public HashMap<String, String> capitalizeName(Driver driver) {

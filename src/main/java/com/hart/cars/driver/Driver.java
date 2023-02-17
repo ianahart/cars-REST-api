@@ -3,6 +3,12 @@ package com.hart.cars.driver;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.hart.cars.cars.Car;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,6 +18,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,9 +29,11 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "driver", uniqueConstraints = { @UniqueConstraint(columnNames = { "email" }) })
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Driver {
 
-    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Car> cars;
 
     @Id
