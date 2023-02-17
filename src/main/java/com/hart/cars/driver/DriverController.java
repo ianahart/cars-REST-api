@@ -1,13 +1,14 @@
 package com.hart.cars.driver;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import com.hart.cars.cars.Car;
+import com.hart.cars.driver.dto.GetDriverDto;
 import com.hart.cars.driver.dto.UpdateDriverDto;
 
 import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ public class DriverController {
 
     private final DriverService driverService;
 
+    @Autowired
     public DriverController(DriverService driverService) {
         this.driverService = driverService;
     }
@@ -43,11 +45,14 @@ public class DriverController {
     public HashMap<String, Object> getDriver(@PathVariable("driverId") Long driverId) {
         Driver driver = this.driverService.getDriver(driverId);
         Hibernate.initialize(driver.getCars());
-        HashMap<String, Object> response = new HashMap<String, Object>();
-        response.put("driver", driver);
-        response.put("cars", driver.getCars());
 
-        return response;
+        HashMap<String, Object> hm = new HashMap<String, Object>();
+        List<Object> list = List.of(driver, driver.getCars());
+
+        hm.put("driver", list.get(0));
+        hm.put("driver_cars", list.get(1));
+        return hm;
+
     }
 
     @PatchMapping("/{driverId}/")
