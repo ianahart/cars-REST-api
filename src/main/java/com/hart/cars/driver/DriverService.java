@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.hart.cars.advice.BadRequestException;
+import com.hart.cars.advice.ForbiddenException;
 import com.hart.cars.advice.NotFoundException;
+import com.hart.cars.driver.dto.UpdateDriverDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,14 +23,14 @@ public class DriverService {
         this.driverRepository = driverRepository;
     }
 
-    public Driver getDriver(Long userId) {
-        Boolean exists = this.driverRepository.existsById(userId);
+    public Driver getDriver(Long driverId) {
+        Boolean exists = this.driverRepository.existsById(driverId);
 
         if (!exists) {
-            throw new NotFoundException("The driver with the id " + userId + " was not found.");
+            throw new NotFoundException("The driver with the id " + driverId + " was not found.");
         }
 
-        Driver driver = this.driverRepository.findById(userId).orElseThrow();
+        Driver driver = this.driverRepository.findById(driverId).orElseThrow();
 
         return driver;
 
@@ -36,7 +38,6 @@ public class DriverService {
 
     @Transactional
     public List<Driver> getAllDrivers() {
-        List<Driver> drivers = this.driverRepository.findAll();
         return this.driverRepository.getAll();
     }
 
@@ -67,5 +68,38 @@ public class DriverService {
         driver.setLastName(hm.get("lastName"));
 
         this.driverRepository.save(driver);
+    }
+
+    public Driver updateDriver(Long driverId, UpdateDriverDto updateDriverDto) {
+        Boolean exists = this.driverRepository.existsById(driverId);
+
+        if (!exists) {
+            throw new NotFoundException("A driver with the id: " + driverId + " does not exist.");
+        }
+
+        if (updateDriverDto.getId() != driverId) {
+            throw new ForbiddenException("Forbidden. Cannot update. Id's do not match.");
+        }
+
+        Driver driver = this.driverRepository.findById(driverId).orElseThrow();
+
+        if (updateDriverDto.getFirstName() != null) {
+            driver.setFirstName(updateDriverDto.getFirstName());
+        }
+
+        if (updateDriverDto.getLastName() != null) {
+            driver.setLastName(updateDriverDto.getLastName());
+        }
+        return driver;
+    }
+
+    public void deleteDriver(Long driverId) {
+        boolean exists = this.driverRepository.existsById(driverId);
+
+        if (!exists) {
+            throw new NotFoundException("A driver with the id: " + driverId + " does not exist.");
+        }
+
+        this.driverRepository.deleteById(driverId);
     }
 }

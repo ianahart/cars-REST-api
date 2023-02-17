@@ -1,13 +1,15 @@
 package com.hart.cars.driver;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.hart.cars.cars.Car;
+import com.hart.cars.driver.dto.UpdateDriver;
+import com.hart.cars.driver.dto.UpdateDriverDto;
 
 import org.hibernate.Hibernate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,11 +37,22 @@ public class DriverController {
         return this.driverService.getAllDrivers();
     }
 
-    @GetMapping("/{userId}/")
-    public List<Object> getDriver(@PathVariable("userId") Long userId) {
-        Driver driver = this.driverService.getDriver(userId);
+    @GetMapping("/{driverId}/")
+    public List<Object> getDriver(@PathVariable("driverId") Long driverId) {
+        Driver driver = this.driverService.getDriver(driverId);
         Hibernate.initialize(driver.getCars());
         return List.of(driver, driver.getCars());
 
+    }
+
+    @PatchMapping("/{driverId}/")
+    public Driver updateDriver(@RequestBody UpdateDriverDto updateDriverDto, @PathVariable("driverId") Long driverId) {
+        Driver driver = this.driverService.updateDriver(driverId, updateDriverDto);
+        return driver;
+    }
+
+    @DeleteMapping("/{driverId}/")
+    public void deleteDriver(@PathVariable("driverId") Long driverId) {
+        this.driverService.deleteDriver(driverId);
     }
 }
