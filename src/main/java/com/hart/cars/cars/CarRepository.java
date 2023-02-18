@@ -12,6 +12,16 @@ import org.springframework.stereotype.Repository;
 public interface CarRepository extends JpaRepository<Car, Long> {
 
     @Query(value = """
+            SELECT * FROM car c
+            WHERE c.price
+            BETWEEN :min
+            AND :max
+             """, nativeQuery = true)
+    List<Car> getCarsBetweenPrice(
+            @Param("min") Optional<Double> min,
+            @Param("max") Optional<Double> max);
+
+    @Query(value = """
                     SELECT *
                     FROM car c
                     WHERE c.driver_id =:driver_id

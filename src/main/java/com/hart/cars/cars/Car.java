@@ -33,6 +33,7 @@ public class Car {
 
     @ManyToOne
     @JoinColumn(name = "driver_id", nullable = false, referencedColumnName = "id")
+    @JsonIgnore
     private Driver driver;
 
     @Column(name = "make", length = 75)

@@ -1,5 +1,6 @@
 package com.hart.cars.cars;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,8 +28,10 @@ public class CarController {
     }
 
     @GetMapping("/")
-    public List<Car> getCars() {
-        return this.carService.getCars();
+    public List<? extends Car> getCars(@RequestParam Optional<Double> min,
+            @RequestParam Optional<Double> max) {
+
+        return this.carService.getCars(min, max);
     }
 
     @PostMapping("/")
@@ -36,8 +40,12 @@ public class CarController {
     }
 
     @GetMapping("/{carId}/")
-    public Car getCar(@PathVariable("carId") Long carId) {
-        return this.carService.getCar(carId);
+    public HashMap<String, Object> getCar(@PathVariable("carId") Long carId) {
+        Car car = this.carService.getCar(carId);
+        HashMap<String, Object> hm = new HashMap<String, Object>();
+        hm.put("car", car);
+        hm.put("driver", car.getDriver());
+        return hm;
     }
 
     @PatchMapping("/{carId}/")

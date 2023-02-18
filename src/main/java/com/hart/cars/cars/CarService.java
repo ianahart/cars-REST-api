@@ -1,6 +1,7 @@
 package com.hart.cars.cars;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.hart.cars.advice.BadRequestException;
 import com.hart.cars.advice.NotFoundException;
@@ -19,7 +20,10 @@ public class CarService {
         this.carRepository = carRepository;
     }
 
-    public List<Car> getCars() {
+    public List<Car> getCars(Optional<Double> min, Optional<Double> max) {
+        if (min.isPresent() && max.isPresent()) {
+            return this.carRepository.getCarsBetweenPrice(min, max);
+        }
         return this.carRepository.findAll();
 
     }
