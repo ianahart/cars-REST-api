@@ -1,7 +1,9 @@
 package com.hart.cars.cars;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.hart.cars.advice.BadRequestException;
 import com.hart.cars.advice.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ public class CarService {
 
     public List<Car> getCars() {
         return this.carRepository.findAll();
+
     }
 
     public Car getCar(Long carId) {
@@ -31,9 +34,16 @@ public class CarService {
     }
 
     public void createCar(Car car) {
-
-        System.out.println(car);
-        this.carRepository.save(car);
+        List<?> exists = this.carRepository.CheckForExistingCar(
+                car.getDriver().getId(),
+                car.getMake(),
+                car.getModel());
+        if (exists.size() >= 1) {
+            throw new BadRequestException("You already have this car.");
+        } else {
+            System.out.println("create car");
+        }
+        // this.carRepository.save(car);
 
     }
 }
