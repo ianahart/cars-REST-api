@@ -3,8 +3,12 @@ package com.hart.cars.cars;
 import java.util.List;
 import java.util.Optional;
 
+import com.hart.cars.cars.dto.UpdateCarDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,5 +38,17 @@ public class CarController {
     @GetMapping("/{carId}/")
     public Car getCar(@PathVariable("carId") Long carId) {
         return this.carService.getCar(carId);
+    }
+
+    @PatchMapping("/{carId}/")
+    public Car updateCar(
+            @PathVariable("carId") Long carId,
+            @RequestBody UpdateCarDto updateCarDto) {
+        return this.carService.updateCar(carId, updateCarDto);
+    }
+
+    @DeleteMapping("/{carId}/")
+    public void deleteCar(@PathVariable Long carId) {
+        this.carService.deleteCar(carId);
     }
 }
