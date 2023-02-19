@@ -1,27 +1,38 @@
 package com.hart.cars.cars;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.hart.cars.driver.Driver;
+import com.hart.cars.review.Review;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "car")
+// @Proxy(lazy = false)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Car {
 
@@ -33,8 +44,12 @@ public class Car {
 
     @ManyToOne
     @JoinColumn(name = "driver_id", nullable = false, referencedColumnName = "id")
-    @JsonIgnore
+    @JsonInclude(Include.NON_NULL)
     private Driver driver;
+
+    @OneToMany(mappedBy = "car", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Review> reviews;
 
     @Column(name = "make", length = 75)
     private String make;
@@ -111,6 +126,10 @@ public class Car {
         return driver;
     }
 
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -141,6 +160,10 @@ public class Car {
 
     public void setDriver(Driver driver) {
         this.driver = driver;
+    }
+
+    public void SetReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
     @Override

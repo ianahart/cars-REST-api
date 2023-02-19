@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.hart.cars.cars.dto.OnlyCarDto;
 import com.hart.cars.cars.dto.UpdateCarDto;
+import com.hart.cars.cars.dto.projection.OnlyCar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +30,7 @@ public class CarController {
     }
 
     @GetMapping("/")
-    public List<? extends Car> getCars(@RequestParam Optional<Double> min,
+    public List<OnlyCar> getCars(@RequestParam Optional<Double> min,
             @RequestParam Optional<Double> max) {
 
         return this.carService.getCars(min, max);

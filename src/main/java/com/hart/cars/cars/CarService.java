@@ -5,10 +5,14 @@ import java.util.Optional;
 
 import com.hart.cars.advice.BadRequestException;
 import com.hart.cars.advice.NotFoundException;
+import com.hart.cars.cars.dto.OnlyCarDto;
 import com.hart.cars.cars.dto.UpdateCarDto;
+import com.hart.cars.cars.dto.projection.OnlyCar;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CarService {
@@ -20,11 +24,12 @@ public class CarService {
         this.carRepository = carRepository;
     }
 
-    public List<Car> getCars(Optional<Double> min, Optional<Double> max) {
+    @Transactional(readOnly = true)
+    public List<OnlyCar> getCars(Optional<Double> min, Optional<Double> max) {
         if (min.isPresent() && max.isPresent()) {
             return this.carRepository.getCarsBetweenPrice(min, max);
         }
-        return this.carRepository.findAll();
+        return this.carRepository.getAll();
 
     }
 
