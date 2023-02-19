@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.hart.cars.cars.Car;
+import com.hart.cars.review.Review;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.annotation.Nonnull;
@@ -32,6 +34,10 @@ public class Driver {
     @JsonIgnore
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Car> cars;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Review> reviews;
 
     @Id
     @SequenceGenerator(name = "driver_sequence", sequenceName = "driver_sequence", allocationSize = 1)
@@ -102,6 +108,10 @@ public class Driver {
         return cars;
     }
 
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -128,6 +138,10 @@ public class Driver {
 
     public void setCars(List<Car> cars) {
         this.cars = cars;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
     @Override
