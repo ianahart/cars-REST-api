@@ -57,3 +57,6 @@ GET /api/v1/reviews/{driverId}
 PATCH /api/v1/reviews/{driverId}
  DELETE /api/v1/reviews/{driverId}
 ```
+
+![api-doc](https://user-images.githubusercontent.com/29121238/220197364-dd807945-6bc5-427c-8495-27536e637dfd.png)
+
